@@ -140,6 +140,10 @@ TMM_counts <- cpm(y, normalized.lib.sizes=TRUE) # uses normalized library sizes,
 TMM_counts <- data.frame(TMM_counts, check.names = FALSE)
 write_csv(TMM_counts, 'data/data_for_ML/luad_rna_TMM_counts_pc_genes_tumor_only_no_outliers.csv')
 
+# get gene names (order preserved with rows in TMM_counts dataframe)
+genes <- data.frame(Symbol = y$genes$Symbol)
+write_csv(genes, 'data/data_for_ML/genes.csv')
+
 
 # OPTIONAL #####################################################################
 # run analysis including  normal samples #######################################
