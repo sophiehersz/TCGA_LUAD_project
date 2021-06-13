@@ -12,7 +12,7 @@ def apply_z_score(counts_table):
     '''
     Scales RNAseq counts table using z-score
     @param counts_table: dataframe with normalized RNAseq counts
-    @return: dataframe with standardized counts
+    @return counts_zscore: dataframe with standardized counts
     '''
     columns = list(counts_table.columns)
     index = counts_table.index
@@ -24,7 +24,7 @@ def normalize_data(counts_zscore):
     '''
     Normalizes RNAseq counts table using min-max normalization
     @param counts_zscore: dataframe with standardized RNAseq counts
-    @return: dataframe with min-max normalized counts
+    @return counts_zscore_minmax: dataframe with min-max normalized counts
     '''
     columns = list(counts_zscore.columns)
     index = counts_zscore.index
@@ -39,7 +39,7 @@ def getGeneList(tested_genes, n, rank_by='FDR', logFC_filter=True):
     @param n: number of genes to be returned
     @param rank_by: variable to be used for ranking. Possible values: 'FDR', 'logFC_up', 'logFC_down'
     @param logFC_filter: if True, keeps only genes with (logFC <= -1 | logFC >= 1)
-    @return: a list containing the gene symbols of interest
+    @return gene_list: a list containing the gene symbols of interest
     '''
     if logFC_filter:
         tested_genes = tested_genes.loc[(tested_genes['logFC'] < -1) | (tested_genes['logFC'] > 1)]
@@ -61,7 +61,7 @@ def prepareScoringData(counts_zscore_minmax, sample_info, genes):
     genes as columns
     @param sample_info: dataframe containing mutation_status for all samples
     @param genes: list of genes to be considered
-    @return: dataframe containing the RNAseq counts for the genes of interest and mutation status for all samples
+    @return scoring_counts: dataframe containing the RNAseq counts for the genes of interest and mutation status for all samples
     '''
     # Filter df_rna using gene_list
     # Add mutation status as last columns
@@ -75,7 +75,7 @@ def kaufmanScore(scoring_counts):
     '''
     Computes Kaufman score (unweighted mean) for each sample and stores them in a "score" column in the counts dataframe
     @param scoring_counts: dataframe with RNAseq counts for the genes of interest (generated with prepareScoringData() function)
-    @return: dataframe containing the Kaufman score computed for each sample
+    @return df_score: dataframe containing the Kaufman score computed for each sample
     '''
     # Computes Kaufman score for each sample (arithmetic mean of all gene values)
     ncol = len(scoring_counts.columns)
@@ -89,7 +89,7 @@ def plotScores(df_score, title = None, y_lim=None):
     @param df_score: dataframe containing Kaufman score and mutation_status for all samples
     @param title: string, the plot title
     @param y_lim: 2 integers, specifying the min and max values along the plot y-axis
-    @return: figure containing the plot
+    @return fig: figure containing the plot
     '''
     fig_dims = (4, 6)
     fig, ax = plt.subplots(figsize=fig_dims)
@@ -109,7 +109,7 @@ def plotROC(fpr, tpr, title=None, y_lim=None):
     @param tpr: array, the true positive rate
     @param title: string, the plot title
     @param y_lim: 2 integers, specifying the min and max values along the plot y-axis
-    @return: figure containing the plot
+    @return fig: figure containing the plot
     '''
     fig_dims = (6, 6)
     fig, ax = plt.subplots(figsize=fig_dims)
@@ -132,7 +132,7 @@ sample_info = pd.read_csv('data/data_for_ML/sample_info_tumor_only_no_outliers.c
 # genes: list of gene symbols (protein coding genes only, corresponding to df_rna (order preserved)
 genes = pd.read_csv('data/data_for_ML/genes.csv')
 # exact_test: table with exact test results (edgeR) for all protein-coding genes
-exact_test = pd.read_csv('results/DE_analysis/ExactTest_pc_genes_tumor_only_no_outliers.csv')
+tested_genes = pd.read_csv('results/DE_analysis/ExactTest_pc_genes_tumor_only_no_outliers.csv')
 
 # Pre-process data ####################################################################################################
 # Transpose df_rna (to have genes as columns, samples as rows)
@@ -154,25 +154,25 @@ kaufman_genes = ['DUSP4', 'PDE4D', 'IRS2', 'BAG1', 'HAL', 'TACC2', 'AVPI1', 'CPS
                  'SIK1', 'FGA','GLCE', 'TESC', 'MUC5AC', 'TFF1']
 
 # Ranked gene lists
-top_5_FDR = getGeneList(exact_test, 5, rank_by='FDR', logFC_filter=True)
-top_16_FDR = getGeneList(exact_test, 16, rank_by='FDR', logFC_filter=True)
-top_50_FDR = getGeneList(exact_test, 50, rank_by='FDR', logFC_filter=True)
-top_100_FDR = getGeneList(exact_test, 100, rank_by='FDR', logFC_filter=True)
-top_1000_FDR = getGeneList(exact_test, 1000, rank_by='FDR', logFC_filter=True)
+top_5_FDR = getGeneList(tested_genes, 5, rank_by='FDR', logFC_filter=True)
+top_16_FDR = getGeneList(tested_genes, 16, rank_by='FDR', logFC_filter=True)
+top_50_FDR = getGeneList(tested_genes, 50, rank_by='FDR', logFC_filter=True)
+top_100_FDR = getGeneList(tested_genes, 100, rank_by='FDR', logFC_filter=True)
+top_1000_FDR = getGeneList(tested_genes, 1000, rank_by='FDR', logFC_filter=True)
 
-top_16_logFC_up = getGeneList(exact_test, 16, rank_by='logFC_up', logFC_filter=True)
-top_100_logFC_up = getGeneList(exact_test, 100, rank_by='logFC_up', logFC_filter=True)
+top_16_logFC_up = getGeneList(tested_genes, 16, rank_by='logFC_up', logFC_filter=True)
+top_100_logFC_up = getGeneList(tested_genes, 100, rank_by='logFC_up', logFC_filter=True)
 
-top_16_logFC_down = getGeneList(exact_test, 16, rank_by='logFC_down', logFC_filter=True)
-top_100_logFC_down = getGeneList(exact_test, 100, rank_by='logFC_down', logFC_filter=True)
+top_16_logFC_down = getGeneList(tested_genes, 16, rank_by='logFC_down', logFC_filter=True)
+top_100_logFC_down = getGeneList(tested_genes, 100, rank_by='logFC_down', logFC_filter=True)
 
 top_5_important = ['NPY', 'EYS', 'MTMR7', 'ODC1', 'SLC16A14']
-top_17_important = ['NPY', 'EYS', 'MTMR7', 'ODC1', 'SLC16A14', 'NNAT', 'ZACN', 'CACNB2', 'INHA', 'GREB1', 'HPX',
+top_16_important = ['NPY', 'EYS', 'MTMR7', 'ODC1', 'SLC16A14', 'NNAT', 'ZACN', 'CACNB2', 'GREB1', 'HPX',
                     'FURIN', 'TENM1', 'ASPG', 'RPH3AL', 'RET', 'CRB1']
 
 # get random gene list
-n = random.sample(range(0, len(exact_test.index)), 16) # generate 16 random indexes
-random_genes = exact_test.iloc[n, 1]
+n = random.sample(range(0, len(tested_genes.index)), 16) # generate 16 random indexes
+random_genes = tested_genes.iloc[n, 1]
 
 # Scoring ############################################################################################################
 # Prepare data for scoring (select relevant genes and get mutation status)
