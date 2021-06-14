@@ -102,7 +102,7 @@ def plotScores(df_score, title = None, y_lim=None):
     plt.title(title, fontsize=17, weight='bold')
     return(fig)
 
-def plotROC(fpr, tpr, title=None, y_lim=None):
+def plotROC(fpr, tpr, title=None):
     '''
     Plots a ROC curve
     @param fpr: array, the false positive rate
@@ -114,7 +114,6 @@ def plotROC(fpr, tpr, title=None, y_lim=None):
     fig_dims = (6, 6)
     fig, ax = plt.subplots(figsize=fig_dims)
     plt.plot(fpr, tpr)
-    plt.ylim(y_lim)
     plt.xticks(fontsize=13)
     plt.yticks(fontsize=13)
     plt.xlabel('FPR', fontsize=15, weight='bold')
