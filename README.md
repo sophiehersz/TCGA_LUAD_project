@@ -78,8 +78,12 @@ on training set
 ---
 
 ## Misc - Kaufman scoring
+Pipeline script:`kaufmanScoring.py`
+
 Based on publication *Kaufman et al., J Thorac Oncol, 2014*
 
-The script `kaufmanScoring.py` allows the preprocessing of the RNAseq counts
-data (z-score and min-max transformations) and calculates the unweighted mean
-of the stadardized and normalized counts of a gene list of interest.
+1. Data pre-processing
+   1. z-score standardization of TMM normalized counts
+   2. min-max normalization
+2. Data filtering - selection of genes of interest
+3. Scoring - calculation of the unweighted mean of the gene counts
