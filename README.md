@@ -48,5 +48,12 @@ genes can be selected based on their feature importance.
 
 ![alt text](https://github.com/sophiehersz/TCGA_LUAD_project/blob/main/thumbnails/ML_pipeline.png?raw=true)
 
+## Running the pipeline
+Pipeline script: `nestedCV.py`
 
-1. 
+1. Data pre-processing - TMM normalized RNAseq counts are standardized (Z-score) and a min-max normalization is applied.
+2. Selection of genes of interest (feature sets) for model fitting
+3. Fitting of a Logistic Regression and Random Forest model to the data using nested cross-validation
+   1. inner loop - hyperparameter seach on training set (stratified 5-fold data split)
+   2. outer loop - best model performance evaluation on test set (stratified 10-fold data split)
+4. Extraction of feature importance for gene selection
