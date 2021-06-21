@@ -3,11 +3,36 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedKFold, GridSearchCV, cross_validate
 
 # Functions #########################################################################################################
+def apply_z_score(counts_table):
+    '''
+    Scales RNAseq counts table using z-score
+    @param counts_table: dataframe with normalized RNAseq counts
+    @return counts_zscore: dataframe with standardized counts
+    '''
+    columns = list(counts_table.columns)
+    index = counts_table.index
+    counts_zscore = preprocessing.StandardScaler().fit_transform(counts_table)
+    counts_zscore = pd.DataFrame(counts_zscore, columns=columns, index=index)
+    return counts_zscore
+
+def normalize_data(counts_zscore):
+    '''
+    Normalizes RNAseq counts table using min-max normalization
+    @param counts_zscore: dataframe with standardized RNAseq counts
+    @return counts_zscore_minmax: dataframe with min-max normalized counts
+    '''
+    columns = list(counts_zscore.columns)
+    index = counts_zscore.index
+    counts_zscore_minmax = preprocessing.MinMaxScaler().fit_transform(counts_zscore)
+    counts_zscore_minmax = pd.DataFrame(counts_zscore_minmax, columns=columns, index=index)
+    return counts_zscore_minmax
+
 def getGeneList(tested_genes, n, rank_by='FDR', logFC_filter=True):
     '''
     Crates a gene list of interest
@@ -186,9 +211,21 @@ def plotFeatureImportance(feat_importances, title=None, y_lim=None):
     return(fig)
 
 # Load data ##########################################################################################################
-counts_zscore_minmax = pd.read_csv('data/data_for_ML/TMM_counts_zscore_minmax.csv') # pre-processed counts table
+counts = pd.read_csv('data/data_for_ML/luad_rna_TMM_counts_pc_genes_tumor_only_no_outliers.csv') # counts_table with RNAseq counts normalized by TMM in edgeR
+genes = pd.read_csv('data/data_for_ML/genes.csv') # list of gene symbols, corresponding to counts table (order preserved)
 sample_info = pd.read_csv('data/data_for_ML/sample_info_tumor_only_no_outliers.csv') # dataframe with info about samples (mutation_status)
-tested_genes = pd.read_csv('results/DE_analysis/ExactTest_pc_genes_tumor_only_no_outliers.csv') # dataframe with exact test results (edgeR) for all protein-coding genes
+tested_genes = pd.read_csv('results/DE_analysis/ExactTest_pc_genes_tumor_only_no_outliers.csv') # dataframe with exact test results (edgeR)
+
+# Pre-process data ####################################################################################################
+# Transpose counts table  (to have genes as columns, samples as rows)
+counts_table = counts.rename(index = genes['Symbol']) # rename rows as gene symbols
+counts_table = counts_table.transpose()
+# Standardize data with Z-score
+counts_zscore = apply_z_score(counts_table)
+counts_zscore.to_csv('data/data_for_ML/TMM_counts_zscore.csv', index=False)
+# Scale data using zero-one normalization
+counts_zscore_minmax = normalize_data(counts_zscore)
+counts_zscore_minmax.to_csv('data/data_for_ML/TMM_counts_zscore_minmax.csv', index=False)
 
 # Make gene lists ####################################################################################################
 # 16-signature genes
