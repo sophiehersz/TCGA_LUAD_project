@@ -48,7 +48,7 @@ genes can be selected based on their feature importance.
 
 ![alt text](https://github.com/sophiehersz/TCGA_LUAD_project/blob/main/thumbnails/ML_pipeline.png?raw=true)
 
-## Running the pipeline
+### Running the pipeline
 Pipeline script: `nestedCV.py`
 
 1. Data pre-processing - TMM normalized RNAseq counts are standardized (Z-score) and a min-max normalization is applied.
@@ -57,3 +57,29 @@ Pipeline script: `nestedCV.py`
    1. inner loop - hyperparameter seach on training set (stratified 5-fold data split)
    2. outer loop - best model performance evaluation on test set (stratified 10-fold data split) using ROC-AUC metrics
 4. Extraction of feature importance for gene selection
+
+---
+
+## WSI data exploration
+
+### Classification using Multiple-Instance Learning
+Pipeline script: `imageDataMIL.py`
+
+Attention-based Deep Multiple Instance Learning model (https://arxiv.org/abs/1802.04712)
+
+1. Data filtering - selects files from patients in patient list
+2. Data pre-processing
+   1. Selects a random set of instances per bag (100 instances) to speed up training
+   2. Selects a balanced subset of bags (same number of bags for each class)
+3. Model training - trains an Attention-based Deep Multiple Instance Learning model
+on training set
+4. Evaluates model on test set using ROC-AUC metrics
+
+---
+
+## Misc - Kaufman scoring
+Based on publication *Kaufman et al., J Thorac Oncol, 2014*
+
+The script `kaufmanScoring.py` allows the preprocessing of the RNAseq counts
+data (z-score and min-max transformations) and calculates the unweighted mean
+of the stadardized and normalized counts of a gene list of interest.
