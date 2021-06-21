@@ -1,5 +1,5 @@
 # TCGA_LUAD_project
-
+Work in progress
 ## Data sources
 
 ### RNAseq data - HTseq raw counts
@@ -43,7 +43,8 @@ For dimensionality reduction and data visualization, run `5_TCGA_exploreData.R`
 
 ## Machine learning for feature selection
 Method to derive a minimal gene expression signature for the classification of STK11
-mutant tumors.
+mutant tumors. After fitting a Logistic Regression or Random Forest model to the data, 
+genes can be selected based on their feature importance.
 
 ![alt text](https://github.com/sophiehersz/TCGA_LUAD_project/blob/main/thumbnails/ML_pipeline.png?raw=true)
 
