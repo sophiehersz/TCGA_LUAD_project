@@ -30,10 +30,12 @@ For RNAseq and mutation data download, run script `1_TCGA_getData.R`
 
 ### Data  filtering and pre-processing
 1. To make list of patients containing all 3 data modalities (RNAseq, mutation and WSI), run script `2_TCGA_getPatientList.R`
-2. To prepare the RNAseq counts for DE analysis, run script `3_TCGA_prepareCountsTable.R`
+2. To prepare the RNAseq counts for DE analysis, run script `3_TCGA_prepareCountsTable.R`. This script combines all 
+   RNAseq counts files into one single dataframe, for all patients belonging to the previous list.
+   It also adds gene symbols to the datafrane and allows the selection of gene types of interest (e.g. protein-coding genes)
 
 ### DE analysis
-To run the edgeR DE analysis pipeline, run `4_TCGA_runDEedgeR.R`
+To run the edgeR DE analysis pipeline, run `4_TCGA_runDEedgeR.R`.
 
 ### Data exploration
 For dimensionality reduction and data visualization, run `5_TCGA_exploreData.R`
