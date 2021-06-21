@@ -17,13 +17,24 @@ Image embeddings downloaded from https://github.com/binli123/dsmil-wsi
 
 Publication: *Li et al., 2021* (https://arxiv.org/abs/2011.08939)
 
+---
 ## RNAseq analysis pipeline
 Differential expression (DE) analysis performed using edgeR (https://bioconductor.org/packages/release/bioc/html/edgeR.html)
 
 ![alt text](https://github.com/sophiehersz/TCGA_LUAD_project/blob/main/thumbnails/RNAseq_pipeline.png?raw=true)
 
+---
+## Running the pipeline
+### Data download
+For RNAseq and mutation data download, run script `1_TCGA_getData.R`
 
+### Data  filtering and pre-processing
+1. To make list of patients containing all 3 data modalities (RNAseq, mutation and WSI), run script `2_TCGA_getPatientList.R`
+2. To prepare the RNAseq counts for DE analysis, run script `3_TCGA_prepareCountsTable.R`
 
+### DE analysis
+To run the edgeR DE analysis pipeline, run `4_TCGA_runDEedgeR.R`
 
-
+### Data exploration
+For dimensionality reduction and data visualization, run `5_TCGA_exploreData.R`
 
