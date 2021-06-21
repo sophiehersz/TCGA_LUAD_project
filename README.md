@@ -26,13 +26,13 @@ Differential expression (DE) analysis performed using edgeR (https://bioconducto
 ---
 ## Running the pipeline
 ### Data download
-For RNAseq and mutation data download, run script `1_TCGA_getData.R`
+For RNAseq and mutation data download, run `1_TCGA_getData.R`
 
 ### Data  filtering and pre-processing
-1. To make list of patients containing all 3 data modalities (RNAseq, mutation and WSI), run script `2_TCGA_getPatientList.R`
-2. To prepare the RNAseq counts for DE analysis, run script `3_TCGA_prepareCountsTable.R`. This script combines all 
+1. To make list of patients containing all 3 data modalities (RNAseq, mutation and WSI), run `2_TCGA_getPatientList.R`
+2. To prepare the RNAseq counts for DE analysis, run `3_TCGA_prepareCountsTable.R`. This script combines all 
    RNAseq counts files into one single dataframe, for all patients belonging to the previous list.
-   It also adds gene symbols to the datafrane and allows the selection of gene types of interest (e.g. protein-coding genes)
+   It also adds gene symbols to the dataframe and allows the selection of gene types of interest (e.g. protein-coding genes)
 
 ### DE analysis
 To run the edgeR DE analysis pipeline, run `4_TCGA_runDEedgeR.R`.
