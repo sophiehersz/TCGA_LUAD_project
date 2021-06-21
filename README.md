@@ -23,7 +23,6 @@ Differential expression (DE) analysis performed using edgeR (https://bioconducto
 
 ![alt text](https://github.com/sophiehersz/TCGA_LUAD_project/blob/main/thumbnails/RNAseq_pipeline.png?raw=true)
 
----
 ## Running the pipeline
 ### Data download
 For RNAseq and mutation data download, run `1_TCGA_getData.R`
@@ -40,3 +39,13 @@ To run the edgeR DE analysis pipeline, run `4_TCGA_runDEedgeR.R`.
 ### Data exploration
 For dimensionality reduction and data visualization, run `5_TCGA_exploreData.R`
 
+---
+
+## Machine learning for feature selection
+Method to derive a minimal gene expression signature for the classification of STK11
+mutant tumors.
+
+![alt text](https://github.com/sophiehersz/TCGA_LUAD_project/blob/main/thumbnails/ML_pipeline.png?raw=true)
+
+
+1. 
