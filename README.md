@@ -111,17 +111,35 @@ Outputs:
 
 ## WSI data exploration
 
+### Mean/median aggregation and dimensionality reduction
+Pipeline script: `imageDataExploration.py`
+1. Data pre-processing - computes mean or median embedding for each bag
+2. Dimensionality reduction
+3. Data visualization
+
+Outputs:
+
+- `mutation_status_embeddings.csv`: STK11 mutation status for WSI samples
+- `mean_image_embeddings.csv`: mean embeddings for each WSI bag
+- `median_image_embeddings.csv`: median embeddings for each WSI bag
+
+
+
+### Classification using mean and median aggregation
+
+Pipeline script: 
+
 ### Classification using Multiple-Instance Learning
 Pipeline script: `imageDataMIL.py`
 
 Attention-based Deep Multiple Instance Learning model (https://arxiv.org/abs/1802.04712)
 
-1. Data filtering - selects files from patients in patient list
+1. Data filtering - selects files from patients in `sample_info_tumor_only_no_outliers.csv`
 2. Data pre-processing
    1. Selects a random set of instances per bag (100 instances) to speed up training
    2. Selects a balanced subset of bags (same number of bags for each class)
 3. Model training - trains an Attention-based Deep Multiple Instance Learning model
-on training set
+on training set, using stratified 5-fold cross-validation
 4. Evaluates model on test set using ROC-AUC metrics
 
 ---
@@ -135,4 +153,5 @@ Based on publication *Kaufman et al., J Thorac Oncol, 2014*
    1. z-score standardization of TMM normalized counts
    2. min-max normalization
 2. Data filtering - selection of genes of interest
-3. Scoring - calculation of the unweighted mean of the gene counts
+3. Scoring - calculation of the unweighted mean of the standardized and
+   normalized gene counts
