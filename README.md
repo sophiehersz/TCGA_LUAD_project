@@ -125,9 +125,12 @@ Outputs:
 
 
 
-### Classification using mean and median aggregation
+### Classification using mean/median aggregation and Random Forest
 
-Pipeline script: 
+Pipeline script: `imageDataClassification.py`
+
+Uses mean or median aggregated image embeddings to train a Random Forest model
+for STK11 mutation classification.
 
 ### Classification using Multiple-Instance Learning
 Pipeline script: `imageDataMIL.py`
