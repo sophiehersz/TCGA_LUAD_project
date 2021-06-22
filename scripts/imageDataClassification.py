@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedKFold, GridSearchCV, cross_validate
 import matplotlib.pyplot as plt
@@ -82,20 +81,6 @@ def plot_nested_cv_results(scores, y_lim=None, title=None, rotation=0):
 mean_embeddings = pd.read_csv('data/data_for_ML/mean_image_embeddings.csv')
 median_embeddings = pd.read_csv('data/data_for_ML/median_image_embeddings.csv')
 mutation_status = pd.read_csv('data/data_for_ML/mutation_status_embeddings.csv')
-
-# Logistic regression ##############################################################################################
-# define the model
-LR_model = LogisticRegression(solver='liblinear',
-                              class_weight='balanced',
-                              random_state=0)
-
-# define hyperparameter search space
-LR_params = {'C': [0.01, 0.1, 1, 10, 100],
-             'penalty': ['l1', 'l2']}
-
-# run nested CV
-LR_cv_results, LR_average_scores = nestedCV_images(LR_model, LR_params, mean_embeddings, mutation_status)
-
 
 # Random Forest ##############################################################################################
 # define the model
