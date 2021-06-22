@@ -25,16 +25,59 @@ Differential expression (DE) analysis performed using edgeR (https://bioconducto
 
 ## Running the pipeline
 ### Data download
-For RNAseq and mutation data download, run `1_TCGA_getData.R`
+For RNAseq and mutation data download, run `1_TCGA_getData.R`. 
+
+Outputs:
+- `luad_rna.csv`: a dataframe 
+containing the barcodes of the RNAseq samples, the names of the corresponding files and
+the corresponding patient IDs.
+- `luad_mut_mc3.csv`: a dataframe containing mutation data for all patients  
 
 ### Data  filtering and pre-processing
 1. To make list of patients containing all 3 data modalities (RNAseq, mutation and WSI), run `2_TCGA_getPatientList.R`
+   
+   Output:
+   
+   - `luad_patient_list.csv`: a dataframe with the IDs of the selected patients
+   and their STK11 mutation status
+     
+
 2. To prepare the RNAseq counts for DE analysis, run `3_TCGA_prepareCountsTable.R`. This script combines all 
-   RNAseq counts files into one single dataframe, for all patients belonging to the previous list.
-   It also adds gene symbols to the dataframe and allows the selection of gene types of interest (e.g. protein-coding genes)
+   RNAseq counts files into one single dataframe, for all patients in `luad_patient_list.csv`.
+   Also allows the selection of gene types of interest (e.g. protein-coding genes). 
+   
+   Outputs:
+   - `luad_rna_sample_info.csv`: dataframe containing RNAseq sample barcodes, file names,
+   STK11 mutation status and sample type (tumor vs normal) for all patients in
+     `luad_patient_list.csv`.
+     
+   - `luad_raw_counts_table.csv`: dataframe containing raw RNAseq counts 
+     for all genes and all patients in `luad_patient_list.csv`
+     
+   - `luad_raw_counts_table_pc.csv`: dataframe containing raw RNAseq counts
+   for protein-coding genes only, for all patients in `luad_patient_list.csv`
 
 ### DE analysis
 To run the edgeR DE analysis pipeline, run `4_TCGA_runDEedgeR.R`.
+
+Outputs:
+
+- `sample_info_tumor_only_no_outliers.csv`: a filtered version of the
+`luad_rna_sample_info.csv` dataframe, containing information for patients
+  in `luad_patient_list.csv` only, and excluding normal tissue samples and
+  outliers
+  
+- `luad_raw_counts_table_tumor_only_no_outliers.csv`: a filtered version of
+`luad_raw_counts_table_pc.csv`, containing only the samples of interest
+  
+- `ExactTest_pc_genes_tumor_only_no_outliers.csv`: s dataframe with the DE
+analysis results for all genes of interest (p-value, logFC, FDR...)
+  
+- `luad_rna_TMM_counts_pc_genes_tumor_only_no_outliers.csv`: TMM normalized
+counts table for further analysis
+  
+- `genes.csv`: the list of gene symbols corresponding to the counts tables rows
+  (order preserved)
 
 ### Data exploration
 For dimensionality reduction and data visualization, run `5_TCGA_exploreData.R`
