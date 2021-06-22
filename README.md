@@ -101,6 +101,12 @@ Pipeline script: `nestedCV.py`
    2. outer loop - best model performance evaluation on test set (stratified 10-fold data split) using ROC-AUC metrics
 4. Extraction of feature importance further for gene selection
 
+Outputs:
+
+- `TMM_counts_zscore.csv`: standardized counts table
+
+- `TMM_counts_zscore_minmax.csv`: min-max normalized counts
+
 ---
 
 ## WSI data exploration
